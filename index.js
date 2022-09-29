@@ -5,18 +5,16 @@ const showErrorMessage = (message) => console.log(chalk.red(`\n${message}`));
 
 const showFormData = (answer) => {
   console.log("\n\nConfira seus dados abaixo: ");
-  // answers.forEach(answer => {
-    console.log(`Nome: ${chalk.greenBright(answer.name)}`);
-    console.log(`Email: ${chalk.greenBright(answer.email)}`);
-    console.log(`Telefone: ${chalk.greenBright(answer.phone)}`);
-  // })
+  console.log(`Nome: ${chalk.greenBright(answer.name)}`);
+  console.log(`Email: ${chalk.greenBright(answer.email)}`);
+  console.log(`Telefone: ${chalk.greenBright(answer.phone)}`);
+  console.log(`CPF: ${chalk.greenBright(answer.cpf)}`);
 };
 
 const questions = [
   {
     message: "Informe seu nome: ",
     name: "name",
-    title: "Nome",
     type: "input",
     validate: (input) => {
       if (input.length == 0) {
@@ -29,7 +27,6 @@ const questions = [
   {
     message: "Informe seu email: ",
     name: "email",
-    title: "Email",
     type: "input",
     validate: (input) => {
       if (input.length == 0) {
@@ -46,9 +43,26 @@ const questions = [
     },
   },
   {
+    message: "Insira seu CPF: ",
+    name: "cpf",
+    type: "input",
+    validate: (input) => {
+      if (input.length == 0) {
+        showErrorMessage("Por favor, informe um CPF.");
+      } else if (RegExp(/\D/g).test(input)) {
+        showErrorMessage(
+          "Insira apenas números."
+        );
+      } else if (input.length < 11 || input.length > 11) {
+        showErrorMessage("Digite um CPF válido.");
+      } else {
+        return true;
+      }
+    },
+  },
+  {
     message: "Insira seu número de telefone: ",
     name: "phone",
-    title: "Telefone",
     type: "input",
     validate: (input) => {
       if (input.length == 0) {
@@ -66,8 +80,8 @@ const questions = [
 
 inquirer
   .prompt(questions)
-  .then(answers => showFormData(answers))
-  .catch(error => {
+  .then((answers) => showFormData(answers))
+  .catch((error) => {
     if (error.isTtyError) {
       showErrorMessage("Desculpe! Houve um erro ao acessar o console.");
     } else {
